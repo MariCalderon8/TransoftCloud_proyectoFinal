@@ -1,19 +1,23 @@
+// config/database
 const mysql = require('mysql2/promise');
-const { getDatabaseConfig } = require('./environments');
+const { getEnvironmentConfig } = require('./environments');
 
 class Database {
     constructor(env = 'development') {
-        this.config = getDatabaseConfig(env);
+        this.config = getEnvironmentConfig(env);
         this.pool = null;
     }
 
+    
     async connect() {
         try {
+
+            
             this.pool = mysql.createPool({
                 host: this.config.host,
                 user: this.config.user,
                 password: this.config.password,
-                database: this.config.database,
+                database: this.config.name,
                 port: this.config.port,
                 connectionLimit: this.config.connectionLimit || 10,
                 connectTimeout: this.config.connectTimeout || 10000,

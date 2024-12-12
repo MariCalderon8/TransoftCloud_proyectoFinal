@@ -1,25 +1,24 @@
-// config/environment.js
 const environments = {
     development: {
-        apiBaseUrl: 'http://localhost:3000/api',
-        database: {
-            host: 'localhost',
-            port: 5432,
-            name: 'mi_proyecto_dev'
-        }
+        apiBaseUrl: 'http://localhost:3306/api',
+        host: 'localhost',
+        user: 'root',
+        password: 'Db/26021986',
+        port: 3306,
+        name: 'pruebacloud'
     },
     production: {
         apiBaseUrl: 'https://mi-proyecto-cloud.com/api',
-        database: {
-            host: 'cloud-database-host',
-            port: 5432,
-            name: 'mi_proyecto_prod'
-        }
+        host: 'cloud-database-host',
+        port: 5432,
+        name: 'mi_proyecto_prod'
     }
 };
 
-// Función para obtener la configuración del entorno actual
-export const getEnvironmentConfig = () => {
-    const env = process.env.NODE_ENV || 'development';
-    return environments[env];
+// Cambiar a module.exports para usar con require
+module.exports = {
+    getEnvironmentConfig: (env = 'development') => {
+        const currentEnv = process.env.NODE_ENV || env;
+        return environments[currentEnv];
+    }
 };
