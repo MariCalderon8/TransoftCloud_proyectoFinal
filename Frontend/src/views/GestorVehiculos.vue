@@ -1,8 +1,4 @@
 <template>
-    <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    </head>
     <body>
         <div class="container">
             <Header/>
@@ -58,6 +54,10 @@
                     <label for="motor" class="form-label">Numero de Motor</label>
                     <input type="text" v-model="form.motor" class="form-control" id="motor" placeholder="Num. Motor" required>
                 </div>
+                <div class="col-6">
+                    <label for="usuario" class="form-label">Cedula del usuario</label>
+                    <input type="number" v-model="form.usuario" class="form-control" id="motor" placeholder="CC usuario" required>
+                </div>
 
                 <!-- <div class="col-6">
                 <label for="tecno" class="form-label">Fecha de tecnicomecanica</label>
@@ -70,10 +70,7 @@
                 </div> -->
 
             <div class="col-6">
-                <div class="col-6">
-                    <label for="usuario" class="form-label">Cedula del usuario</label>
-                    <input type="number" v-model="form.usuario" class="form-control" id="motor" placeholder="CC usuario" required>
-                </div>
+                
                         <!-- <label for="tenedor" class="form-label">Tenedor</label>
                         <select class="form-select" id="tenedor" placeholder="Tenedor">
             
@@ -106,6 +103,44 @@
                     </div>
                 </form>
                 
+                <h2 class="register-vehicles-title">Vehiculos Registrados</h2>
+
+                <table class="table">
+                
+                    <thead class="thead-light">
+                        <tr>
+                        <th scope="col">Placa</th>
+                        <th scope="col">Marca</th>
+                        <th scope="col">Modelo</th>
+                        <th scope="col">CC Propietario</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Chasis</th>
+                        <th scope="col">Motor</th>
+                        <th scope="col">Cap / Carga</th>
+                        <th scope="col">¿Está activo?</th>
+                        <th scope="col">CC Usuario</th>
+                        <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody v-for="vehicle in vehicleStore.vehicles" :vehicle="vehicle">
+                        <tr>
+                        <th scope="row">{{ vehicle.placa }}</th>
+                        <td>{{ vehicle.marca }}</td>
+                        <td>{{ vehicle.modelo }}</td>
+                        <td>{{ vehicle.propietario }}</td>
+                        <td>{{ vehicle.tipo }}</td>
+                        <td>{{ vehicle.chasis }}</td>
+                        <td>{{ vehicle.motor }}</td>
+                        <td>{{ vehicle.capacidadCarga }}</td>
+                        <td>{{ vehicle.estaActivo === 1 ? 'SI' : 'NO' }}</td>
+                        <td>{{ vehicle.usuario }}</td>
+                        <td class="td-acciones">
+                            <button class="btn btn-danger btn-sm" @click="deleteVehicle(vehicle.placa)">Eliminar</button>
+                            <button class="btn btn-primary btn-sm" @click="editVehicle(vehicle.placa)">Editar</button>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
         </div>
         <Footer/>
     </body>
@@ -117,7 +152,7 @@
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
 import { useVehicleSotre } from '@/stores/vehicleStore';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 
     export default defineComponent({
         name: 'GestorVehiculos',
@@ -138,6 +173,10 @@ import { defineComponent, ref } from 'vue';
                 usuario : ""
             })
 
+            onMounted(() => {
+                vehicleStore.fetchAllVehicles();
+            });
+
             const handleFormSubmit = async () =>{
                 await vehicleStore.createVehicle(
                     form.value.placa,
@@ -153,6 +192,16 @@ import { defineComponent, ref } from 'vue';
                     form.value.usuario
                 )
                 resetForm();
+                await vehicleStore.fetchAllVehicles();
+            }
+
+            const deleteVehicle = async (placa) => {
+                await vehicleStore.deleteVehicle(placa);
+                await vehicleStore.fetchAllVehicles();
+            }
+
+            const editVehicle = async (placa) => {
+                alert('FUNCIÓN PENDIENTE')
             }
 
             const resetForm = () =>{
@@ -175,6 +224,8 @@ import { defineComponent, ref } from 'vue';
                 vehicleStore,
                 form,
                 handleFormSubmit,
+                deleteVehicle,
+                editVehicle,
                 resetForm
             }
         }
@@ -204,6 +255,17 @@ import { defineComponent, ref } from 'vue';
     
     .profile-image-input {
         display: none;
+    }
+
+    .register-vehicles-title{
+        padding: 20px;
+        text-align: center;
+    }
+
+    .td-acciones{
+        display: flex;
+        justify-content: center;
+        gap: 5px;
     }
 
 </style>

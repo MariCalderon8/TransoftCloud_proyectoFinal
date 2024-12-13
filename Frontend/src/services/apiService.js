@@ -46,9 +46,7 @@ class ApiService {
   }
 
   handleUnauthorized() {
-    // Lógica para manejar token expirado
     localStorage.removeItem('authToken');
-    // Redirigir al login
     window.location.href = '/login';
   }
 
@@ -71,7 +69,23 @@ class ApiService {
     }
   }
 
-  // Métodos similares para put, delete, etc.
+  async put(endpoint, data, config = {}) {
+    try {
+      const response = await this.instance.put(endpoint, data, config);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async delete(endpoint, config = {}) {
+    try {
+      const response = await this.instance.delete(endpoint, config);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
 
   handleError(error) {
     const errorMessage = error.response 

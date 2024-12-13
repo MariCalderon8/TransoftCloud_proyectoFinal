@@ -9,7 +9,12 @@ export const useVehicleSotre = defineStore(
         const error = ref(null);
 
         const fetchAllVehicles = async () =>{
-            //Pendiente
+            try{
+                vehicles.value = await vehicleService.fetchAllVehicles();
+            } catch(err){
+                error.value = 'Error al cargar todos los vehiculos';
+                console.error(error);
+            }
         }
 
         const createVehicle = async(placa, tipo, propietario, marca, modelo, chasis, motor, capacidadCarga, foto, estaActivo, usuario) =>{
@@ -25,8 +30,21 @@ export const useVehicleSotre = defineStore(
             }
         }
 
+        const deleteVehicle = async(placa) =>{
+            try{
+                await vehicleService.deleteVehicle(placa);
+                alert('Vehículo eliminado con éxito');
+            }catch(error){
+                error.value = 'No se pudo eliminar el vehiculo';
+                console.error(error);
+                alert('No se pudo eliminar el vehículo');
+            }
+        }
+
         return{
+            fetchAllVehicles,
             createVehicle,
+            deleteVehicle,
             vehicles,
             error
         }

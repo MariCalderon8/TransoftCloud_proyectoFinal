@@ -6,7 +6,7 @@ class VehicleController {
     async getAllVehicles(req, res) {
         try {
             const rows = await databaseConnection.query('SELECT * FROM vehiculo');
-            const vehicles = rows.map((row) => new Vehicle(row.placa, row.tipo, row.propietario, row.marca, row.modelo, row.chasis, row.motor, row.capacidadCarga, row.foto, row.estaActivo, row.usuario)); // Crear instancias de la clase
+            const vehicles = rows.map((row) => new Vehicle(row.placa, row.tipo_vehiculo, row.propietario, row.marca, row.modelo, row.chasis, row.motor, row.capacidad_carga, row.foto, row.activo, row.usuario)); // Crear instancias de la clase
             res.json(vehicles);
         } catch (error) {
             res.status(500).json({
