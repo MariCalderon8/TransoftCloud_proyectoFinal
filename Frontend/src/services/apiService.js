@@ -1,6 +1,6 @@
 // services/apiService.js
 import axios from 'axios';
-import { getEnvironmentConfig } from '@/config/environments';
+import { getEnvironmentConfig } from '../config/enviroments';
 
 class ApiService {
   constructor() {

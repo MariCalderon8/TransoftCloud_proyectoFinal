@@ -1,4 +1,6 @@
 const express = require('express');
+const cors = require('cors');
+
 const vehicleRoutes = require('./routes/vehicleRoutes');
 
 const app = express();
@@ -7,6 +9,12 @@ const PORT = 3000;
 
 // Middleware para analizar JSON
 app.use(express.json());
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Permitir solo desde este origen
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Permitir ciertos métodos
+    allowedHeaders: ['Content-Type', 'Authorization'] // Permitir ciertos encabezados
+  }));
 
 // Registrar rutas de vehículos
 app.use('/vehicles', vehicleRoutes);
