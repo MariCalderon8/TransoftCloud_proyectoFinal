@@ -4,7 +4,7 @@ const environments = {
         apiBaseUrl: 'http://localhost:3000', //Puerto en el que corre el back
         host: 'localhost',
         user: 'root',
-        password: 'Db/26021986',
+        password: 'contrasena',
         port: 3306, //Puerto en el que corre la BD
         name: 'pruebacloud'
     },

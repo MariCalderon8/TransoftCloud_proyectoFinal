@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=localhost
+      - DB_PORT=3306
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"  # O 5173 si estás usando un servidor de desarrollo
+    environment:
+      - VUE_APP_BACKEND_URL=http://backend:3000  # URL del backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
