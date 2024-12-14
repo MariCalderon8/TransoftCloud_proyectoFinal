@@ -37,7 +37,7 @@
 
                     <div class="col-6">
                         <label for="tipo" class="form-label">Tipo</label>
-                        <input type="number" v-model="form.tipo" class="form-control" id="tipo" placeholder="Tipo de vehiculo" required>
+                        <input type="text" v-model="form.tipo" class="form-control" id="tipo" placeholder="Tipo de vehiculo" required>
                     </div>
 
                     <div class="col-6">

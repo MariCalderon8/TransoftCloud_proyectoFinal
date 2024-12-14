@@ -4,7 +4,7 @@ export const getEnvironmentConfig = (env = 'development') => {
         apiBaseUrl: 'http://localhost:3000',
         host: 'localhost',
         user: 'root',
-        password: 'Db/26021986',
+        password: 'H4tRL2015',
         port: 3306,
         name: 'pruebacloud',
       },
