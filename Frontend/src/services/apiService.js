@@ -1,14 +1,11 @@
 // services/apiService.js
 import axios from 'axios';
-import { getEnvironmentConfig } from '../config/enviroments';
 
 class ApiService {
   constructor() {
-    const env = process.env.NODE_ENV || 'development';
-    const config = getEnvironmentConfig(env);
     
     this.instance = axios.create({
-      baseURL: config.apiBaseUrl,
+      baseURL: import.meta.env.URL_BACKEND || 'http://localhost:3000',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json'

@@ -169,7 +169,7 @@ import { defineComponent, onMounted, ref } from 'vue';
                 motor : "", 
                 capacidadCarga : 0, 
                 foto : "", 
-                estaActivo : 0, 
+                estaActivo : true, 
                 usuario : ""
             })
 
@@ -215,7 +215,7 @@ import { defineComponent, onMounted, ref } from 'vue';
                     motor : "", 
                     capacidadCarga : "", 
                     foto : "", 
-                    estaActivo : "", 
+                    estaActivo : true, 
                     usuario : ""
                 }
             }
