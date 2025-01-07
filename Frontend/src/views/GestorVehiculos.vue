@@ -13,7 +13,7 @@
                 </div>
 
                 <form @submit.prevent="handleFormSubmit" class="row border border-primary rounded p-3 g-3 mt-5">
-                    
+                    <h2>{{ isEditing ? 'Editando...' : 'Agregar vehículo' }}</h2>
                     <div class="col-6">
                         <label for="propietario" class="form-label">Cedula propietario</label>
                         <input type="text" v-model="form.propietario" class="form-control" id="propietario" placeholder="CC" required>
@@ -22,7 +22,7 @@
 
                     <div class="col-6">
                     <label for="placa" class="form-label">Placa</label>
-                    <input type="text" v-model="form.placa" class="form-control" id="placa" placeholder="ABC123" required>
+                    <input type="text" v-model="form.placa" class="form-control" id="placa" placeholder="ABC123" required :disabled="isEditing">
                 </div>
 
                     <div class="col-6">
@@ -59,32 +59,8 @@
                     <input type="number" v-model="form.usuario" class="form-control" id="motor" placeholder="CC usuario" required>
                 </div>
 
-                <!-- <div class="col-6">
-                <label for="tecno" class="form-label">Fecha de tecnicomecanica</label>
-                <input type="date" v-model="" class="form-control" id="tecno" placeholder="DD-MM-AAAA" required>
-                </div> -->
-
-                <!-- <div class="col-6">
-                <label for="vinculacion" class="form-label">Fecha de vinculacion</label>
-                <input type="date" class="form-control" id="vinculacion" placeholder="DD-MM-AAAA" required>
-                </div> -->
 
             <div class="col-6">
-                
-                        <!-- <label for="tenedor" class="form-label">Tenedor</label>
-                        <select class="form-select" id="tenedor" placeholder="Tenedor">
-            
-                            <option selected disabled>Seleccione el tenedor</option>
-                            
-                            <option value="t1">Tenedor 1</option>     
-                            
-                            <option value="t2">Tenedor 2</option>
-                                        
-                            <option value="t3">Tenedor 3</option>                              
-                                
-                            <option value="t4">Tenedor 4</option>                 
-                                            
-                        </select> -->
 
                     <div class="col-12 -mb-3">
                         <div class="form-check">
@@ -98,7 +74,7 @@
                     <h1> </h1>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                        <button type="submit" class="btn btn-primary me-md-2">Crear</button>
+                        <button type="submit" class="btn btn-primary me-md-2">{{ isEditing ? 'Guardar cambios' : 'Crear vehiculo' }}</button>
                         <button class="btn btn-secondary" @click="resetForm" type="button">Cancelar</button>
                     </div>
                 </form>
@@ -136,7 +112,7 @@
                         <td>{{ vehicle.usuario }}</td>
                         <td class="td-acciones">
                             <button class="btn btn-danger btn-sm" @click="deleteVehicle(vehicle.placa)">Eliminar</button>
-                            <button class="btn btn-primary btn-sm" @click="editVehicle(vehicle.placa)">Editar</button>
+                            <button class="btn btn-primary btn-sm" @click="loadVehicleForEditting(vehicle.placa)">Editar</button>
                         </td>
                         </tr>
                     </tbody>
@@ -151,6 +127,7 @@
 <script lang="js">
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/Header.vue';
+import Vehicle from '@/models/vehicleModel';
 import { useVehicleSotre } from '@/stores/vehicleStore';
 import { defineComponent, onMounted, ref } from 'vue';
 
@@ -159,18 +136,19 @@ import { defineComponent, onMounted, ref } from 'vue';
         components: { Header, Footer },
         setup() {
             const vehicleStore = useVehicleSotre();
+            const isEditing = ref(false);
             const form = ref({
                 placa : "", 
                 tipo : "", 
                 propietario : "", 
                 marca : "", 
-                modelo : "", 
+                modelo : 0, 
                 chasis : "", 
                 motor : "", 
                 capacidadCarga : 0, 
                 foto : "", 
                 estaActivo : true, 
-                usuario : ""
+                usuario : 0
             })
 
             onMounted(() => {
@@ -178,19 +156,37 @@ import { defineComponent, onMounted, ref } from 'vue';
             });
 
             const handleFormSubmit = async () =>{
-                await vehicleStore.createVehicle(
-                    form.value.placa,
-                    form.value.tipo,
-                    form.value.propietario,
-                    form.value.marca,
-                    form.value.modelo,
-                    form.value.chasis,
-                    form.value.motor,
-                    form.value.capacidadCarga,
-                    form.value.foto,
-                    form.value.estaActivo,
-                    form.value.usuario
-                )
+                if(isEditing.value){
+                    const vehicle = new Vehicle(
+                        form.value.placa,
+                        form.value.tipo,
+                        form.value.propietario,
+                        form.value.marca,
+                        form.value.modelo,
+                        form.value.chasis,
+                        form.value.motor,
+                        form.value.capacidadCarga,
+                        form.value.foto,
+                        form.value.estaActivo,
+                        form.value.usuario
+                    )
+                    await vehicleStore.updateVehicle(vehicle);
+                } else {
+                    await vehicleStore.createVehicle(
+                        form.value.placa,
+                        form.value.tipo,
+                        form.value.propietario,
+                        form.value.marca,
+                        form.value.modelo,
+                        form.value.chasis,
+                        form.value.motor,
+                        form.value.capacidadCarga,
+                        form.value.foto,
+                        form.value.estaActivo,
+                        form.value.usuario
+                    )
+                }
+                
                 resetForm();
                 await vehicleStore.fetchAllVehicles();
             }
@@ -200,8 +196,23 @@ import { defineComponent, onMounted, ref } from 'vue';
                 await vehicleStore.fetchAllVehicles();
             }
 
-            const editVehicle = async (placa) => {
-                alert('FUNCIÓN PENDIENTE')
+            const loadVehicleForEditting = async (placa) => {
+                isEditing.value = true;
+                const vehicle = await vehicleStore.fetchVehicleByPlaca(placa);
+                window.scrollTo({ top: 200, behavior: 'smooth' });
+                form.value = {
+                    placa: vehicle.placa,
+                    tipo: vehicle.tipo_vehiculo,
+                    propietario: vehicle.propietario,
+                    marca: vehicle.marca,
+                    modelo: vehicle.modelo,
+                    chasis: vehicle.chasis,
+                    motor: vehicle.motor,
+                    capacidadCarga: vehicle.capacidad_carga,
+                    foto: vehicle.foto,
+                    estaActivo: Boolean(vehicle.activo),
+                    usuario: vehicle.usuario
+                };
             }
 
             const resetForm = () =>{
@@ -218,14 +229,16 @@ import { defineComponent, onMounted, ref } from 'vue';
                     estaActivo : true, 
                     usuario : ""
                 }
+                isEditing.value = false;
             }
 
             return{
                 vehicleStore,
                 form,
+                isEditing,
                 handleFormSubmit,
                 deleteVehicle,
-                editVehicle,
+                loadVehicleForEditting,
                 resetForm
             }
         }

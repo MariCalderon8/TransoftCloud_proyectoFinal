@@ -17,6 +17,16 @@ export const useVehicleSotre = defineStore(
             }
         }
 
+        const fetchVehicleByPlaca = async (placa) =>{
+            try{
+                const vehicle = await vehicleService.fetchVehicleByPlaca(placa);
+                return vehicle[0];
+            } catch(err){
+                error.value = 'Error al buscar vehiculo';
+                console.error(error);
+            }
+        }
+
         const createVehicle = async(placa, tipo, propietario, marca, modelo, chasis, motor, capacidadCarga, foto, estaActivo, usuario) =>{
             const newVehicle = new Vehicle(placa, tipo, propietario, marca, modelo, chasis, motor, capacidadCarga, foto, estaActivo, usuario);
             try{
@@ -41,10 +51,23 @@ export const useVehicleSotre = defineStore(
             }
         }
 
+        const updateVehicle = async(vehiculoEditado) => {
+            try{
+                await vehicleService.updateVehicle(vehiculoEditado);
+                alert('Vehiculo editado con éxito');
+            } catch(error) {
+                error.value = 'No se pudo editar el vehiculo';
+                console.error(error);
+                alert('No se pudo editar el vehículo');
+            }
+        }
+
         return{
             fetchAllVehicles,
+            fetchVehicleByPlaca,
             createVehicle,
             deleteVehicle,
+            updateVehicle,
             vehicles,
             error
         }
