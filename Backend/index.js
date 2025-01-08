@@ -3,6 +3,8 @@ const cors = require('cors');
 
 
 const vehicleRoutes = require('./routes/vehicleRoutes');
+const viajeRoutes = require('./routes/viajeRoutes');
+const cityRoutes = require('./routes/cityRoutes');
 
 const app = express();
 
@@ -17,8 +19,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'] // Permitir ciertos encabezados
   }));
 
-// Registrar rutas de vehículos
+// Registrar rutas 
 app.use('/vehicles', vehicleRoutes);
+app.use('/viajes', viajeRoutes);
+app.use('/cities', cityRoutes);
 
 // Manejo de errores generales
 app.use((err, req, res, next) => {

@@ -15,7 +15,7 @@
 
                 <div class="col-6">
                     <label for="clienteInput" class="form-label">Cliente</label>
-                    <input type="text" class="form-control" id="clienteInput" placeholder="Nombres y apellidos">
+                    <input type="text" class="form-control" id="clienteInput" placeholder="C.C">
                 </div>
 
                 <div class="col-6">
@@ -24,13 +24,13 @@
             
                         <option selected disabled>Seleccione el origen</option>
                             
-                        <option value="t1">Origen 1</option>     
+                        <option value="1">Origen 1</option>     
                             
-                        <option value="t2">Origen 2</option>
+                        <option value="2">Origen 2</option>
                                     
-                        <option value="t3">Origen 3</option>                              
+                        <option value="3">Origen 3</option>                              
                             
-                        <option value="t4">Origen 4</option>                 
+                        <option value="4">Origen 4</option>                 
                                             
                     </select>
 
@@ -42,13 +42,13 @@
             
                         <option selected disabled>Seleccione el producto</option>
                             
-                        <option value="t1">Producto 1</option>     
+                        <option value="1">Producto 1</option>     
                             
-                        <option value="t2">Producto 2</option>
+                        <option value="2">Producto 2</option>
                                     
-                        <option value="t3">Producto 3</option>                              
+                        <option value="3">Producto 3</option>                              
                             
-                        <option value="t4">Producto 4</option>                 
+                        <option value="4">Producto 4</option>                 
                                             
                     </select>
                 </div>
@@ -75,14 +75,9 @@
                         
                 <div class="col-6">
                     <label for="CantidadInput" class="form-label">Cantidad</label>
-                    <input type="text" class="form-control" id="Cantidad" placeholder="">
+                    <input type="number" class="form-control" id="Cantidad" placeholder="">
                 </div>
 
-
-                <div class="col-6">
-                    <label for="kilometroInput" class="form-label">Kilometros</label>
-                    <input type="text" class="form-control" id="kilometroInput" placeholder="km">
-                </div>
 
                 <div class="col-6">
                     <label for="hcargueInput" class="form-label">Hora de cargue</label>
