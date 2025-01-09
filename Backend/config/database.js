@@ -26,26 +26,6 @@ class Database {
     }
   }
 
-  // async connect() {
-  //   try {
-  //     this.pool = mysql.createPool({
-  //       host: this.config.host,
-  //       user: this.config.user,
-  //       password: this.config.password,
-  //       database: this.config.name,
-  //       port: this.config.port,
-  //       connectionLimit: this.config.connectionLimit || 10,
-  //       connectTimeout: this.config.connectTimeout || 10000,
-  //       waitForConnections: true,
-  //       queueLimit: 0,
-  //     });
-  //     console.log('Conexión a la base de datos establecida');
-  //   } catch (error) {
-  //     console.error('Error conectando a la base de datos:', error);
-  //     throw error;
-  //   }
-  // }
-
   async query(sql, params = []) {
     if (!this.pool) {
       await this.connect();

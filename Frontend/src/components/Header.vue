@@ -19,7 +19,7 @@
 
         <li class="nav-item">
         <router-link tag="a" class="nav-link" to="/gestor-clientes">
-            Gestor de clientes
+            Gestor de usuarios
         </router-link>
         </li>
 

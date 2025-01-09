@@ -38,6 +38,7 @@ CREATE TABLE `vehiculo` (
 
 CREATE TABLE `viaje` (
   `idviaje` int NOT NULL AUTO_INCREMENT,
+  `fecha` date NOT NULL,
   `origen` int NOT NULL,
   `destino` int NOT NULL,
   `cliente` int NOT NULL,
@@ -46,6 +47,10 @@ CREATE TABLE `viaje` (
   `conductor` int NOT NULL,
   `placa` char(10) NOT NULL,
   `usuario_creador` int NOT NULL,
+  `producto` varchar(255) NOT NULL,
+  `cantidad` int NOT NULL,
+  `horaCargue` time NOT NULL,
+  `horaDescargue` time NOT NULL,
   PRIMARY KEY (`idviaje`),
   KEY `fk_conductor_idx` (`conductor`),
   KEY `fk_placa_idx` (`placa`),

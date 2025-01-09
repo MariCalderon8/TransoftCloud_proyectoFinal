@@ -1,6 +1,7 @@
 class Viaje {
-    constructor(origen, destino, cliente, valorTotal, valorPagar, conductor, placa, usuarioCreador, producto, cantidad, horaCargue, horaDescargue, idviaje = 0){
+    constructor(fecha, origen, destino, cliente, valorTotal, valorPagar, conductor, placa, usuarioCreador, producto, cantidad, horaCargue, horaDescargue, idviaje = 0){
         this.idviaje = idviaje;
+        this.fecha = fecha;
         this.origen = origen;
         this.destino = destino;
         this.cliente = cliente;

@@ -7,7 +7,7 @@ class ViajeController {
     async getAllViajes(req, res) {
         try {
             const rows = await databaseConnection.query('SELECT * FROM viaje');
-            const viajes = rows.map((row) => new Viaje(row.origen, row.destino, row.cliente, row.valortotal, row.valorpagar, row.conductor, row.placa, row.usuario_creador, row.producto, row.cantidad, row.horaCargue, row.horaDescargue, row.idviaje)); 
+            const viajes = rows.map((row) => new Viaje(row.fecha, row.origen, row.destino, row.cliente, row.valortotal, row.valorpagar, row.conductor, row.placa, row.usuario_creador, row.producto, row.cantidad, row.horaCargue, row.horaDescargue, row.idviaje)); 
             console.log(viajes);
             res.json(viajes);
         } catch (error) {
@@ -33,12 +33,13 @@ class ViajeController {
         }
     }
 
-    // Crear un nuevo vehículo
+    // Crear un nuevo viaje
     async createViaje(req, res) {
         try {
             const viajeData = req.body;
-            const viaje = new Viaje(viajeData.origen, viajeData.destino, viajeData.cliente, viajeData.valortotal, viajeData.valorpagar, viajeData.conductor, viajeData.placa, viajeData.usuario_creador, viajeData.producto, viajeData.cantidad, viajeData.horaCargue, viajeData.horaDescargue);
+            const viaje = new Viaje(viajeData.fecha, viajeData.origen, viajeData.destino, viajeData.cliente, viajeData.valorTotal, viajeData.valorPagar, viajeData.conductor, viajeData.placa, viajeData.usuarioCreador, viajeData.producto, viajeData.cantidad, viajeData.horaCargue, viajeData.horaDescargue);
             const params = [
+                viaje.fecha ?? null,
                 viaje.origen ?? null,
                 viaje.destino ?? null,
                 viaje.cliente ?? null,
@@ -52,11 +53,10 @@ class ViajeController {
                 viaje.horaCargue ?? null,
                 viaje.horaDescargue ?? null
             ];
-            console.log(viaje);
     
             const query = `
-                INSERT INTO viaje (origen, destino, cliente, valortotal, valorpagar, conductor, placa, usuario_creador, producto, cantidad, horaCargue, horaDescargue)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO viaje (fecha, origen, destino, cliente, valortotal, valorpagar, conductor, placa, usuario_creador, producto, cantidad, horaCargue, horaDescargue)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
             
             await databaseConnection.query(query, params);
@@ -64,24 +64,25 @@ class ViajeController {
         } catch (error) {
             console.error('Error detallado:', error);
             res.status(500).json({
-                message: 'Error creando el vehículo',
+                message: 'Error creando el viaje',
                 error: error.message,
             });
         }
     }
 
-    // Editar un vehículo existente
+    // Editar un viaje existente
     async editViaje(req, res) {
         try {
             const viajeData = req.body;
-            const viaje = new Viaje(viajeData.origen, viajeData.destino, viajeData.cliente, viajeData.valortotal, viajeData.valorpagar, viajeData.conductor, viajeData.placa, viajeData.usuario_creador, viajeData.producto, viajeData.cantidad, viajeData.horaCargue, viajeData.horaDescargue, viajeData.idviaje);
+            const viaje = new Viaje(viajeData.fecha, viajeData.origen, viajeData.destino, viajeData.cliente, viajeData.valorTotal, viajeData.valorPagar, viajeData.conductor, viajeData.placa, viajeData.usuarioCreador, viajeData.producto, viajeData.cantidad, viajeData.horaCargue, viajeData.horaDescargue, viajeData.idviaje);
 
             const query = `
                 UPDATE viaje
-                SET origen = ?, destino = ?, cliente = ?, valortotal = ?, valorpagar = ?, conductor = ?, placa = ?, usuario_creador = ?, producto = ?, cantidad = ?, horaCargue = ?, horaDescargue = ?
+                SET fecha= ?, origen = ?, destino = ?, cliente = ?, valortotal = ?, valorpagar = ?, conductor = ?, placa = ?, usuario_creador = ?, producto = ?, cantidad = ?, horaCargue = ?, horaDescargue = ?
                 WHERE idviaje = ?
             `;
             const params = [
+                viaje.fecha ?? null,
                 viaje.origen ?? null,
                 viaje.destino ?? null,
                 viaje.cliente ?? null,
@@ -106,7 +107,7 @@ class ViajeController {
         }
     }
 
-    // Eliminar un vehículo
+    // Eliminar un viaje
     async deleteViaje(req, res) {
         try {
             const { idviaje } = req.params; 
