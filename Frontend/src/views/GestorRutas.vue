@@ -7,17 +7,20 @@
 
                 <h1></h1>
 
-                <h1>Viajes</h1>
+                <h1>{{isEditing ? 'Editando viaje...' : 'Viajes'}}</h1>
 
 
                 <div class="col-6">
                     <label for="fvinculacionInput" class="form-label">Fecha </label>
                     <input v-model="form.fecha" type="date" class="form-control" id="fvinculacionInput" placeholder="DD MM AAAA" required>
+ 
                 </div>
 
                 <div class="col-6">
                     <label for="clienteInput" class="form-label">Cliente</label>
                     <input v-model="form.cliente" type="text" class="form-control" id="clienteInput" placeholder="C.C" required>
+                    <div class="invalid-feedback">Example invalid feedback text</div>
+
                 </div>
 
                 <div class="col-6">
@@ -124,25 +127,58 @@
 
                 <h1></h1>
 
-            <div class="row border border-primary rounded p-3">
+            <div class="row border border-primary rounded p-3 justify-content-md-center">
 
-                <div class="col-4">
-                    <button class="btn btn-primary me-md-2" type="submit">Guardar</button>
+                <div class="col-2">
+                    <button class="btn btn-primary btn-viajes" type="submit">{{ isEditing ? 'Guardar cambios' : 'Registrar' }}</button>
                 </div>
 
-                <div class="col-4">
-                    <button class="btn btn-primary me-md-2" type="button">Cancelar</button>
-                </div>
-
-                <div class="col-4">
-                    <button class="btn btn-primary me-md-2" type="button">Nuevo registro</button>
+                <div class="col-2">
+                    <button class="btn btn-secondary btn-viajes" @click="resetForm" type="button">Cancelar</button>
                 </div>
 
             </div> 
 
         </form>
 
-         
+        <h2 class="register-viajes-title">Viajes Registrados</h2>
+
+        <table class="table">
+
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Destino</th>
+                <th scope="col">Placa</th>
+                <th scope="col">Producto</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Hora Cargue</th>
+                <th scope="col">Hora Descargue</th>
+                <th scope="col">Acciones</th>
+
+                </tr>
+            </thead>
+            <tbody v-for="viaje in viajeStore.viajes" :viaje="viaje">
+                <tr>
+                <th scope="row">{{ viaje.idviaje }}</th>
+                <td>{{ convertDate(viaje.fecha) }}</td>
+                <td>{{ cityStore.getCityName(viaje.origen) }}</td>
+                <td>{{ cityStore.getCityName(viaje.destino) }}</td>
+                <td>{{ viaje.placa }}</td>
+                <td>{{ viaje.producto }}</td>
+                <td>{{ viaje.cantidad }}</td>
+                <td>{{ viaje.horaCargue }}</td>
+                <td>{{ viaje.horaDescargue }}</td>
+                <td class="td-acciones">
+                    <button class="btn btn-danger btn-sm" @click="deleteViaje(viaje.idviaje)">Eliminar</button>
+                    <button class="btn btn-primary btn-sm" @click="loadViajeForEditting(viaje.idviaje)">Editar</button>
+                    <button class="btn btn-secondary btn-sm" >Info</button>
+                </td>
+                </tr>
+            </tbody>
+        </table>
         </div>
         <Footer/>
     </body>
@@ -167,6 +203,7 @@ import { defineComponent, onMounted, ref } from 'vue';
             const cityStore = useCityStore();
             const isEditing = ref(false);
             const form = ref({
+                idviaje: 0,
                 fecha: "",
                 cliente: "",
                 origen: 0,
@@ -183,11 +220,11 @@ import { defineComponent, onMounted, ref } from 'vue';
             })
 
             onMounted(() => {
+                viajeStore.fetchAllViajes();
                 cityStore.fetchAllCities();
             })
 
             const handleFormSubmit = async () =>{
-                console.log(isEditing.value);
                 const viaje = new Viaje(
                     form.value.fecha,
                     form.value.origen,
@@ -203,22 +240,58 @@ import { defineComponent, onMounted, ref } from 'vue';
                     form.value.horaCargue,
                     form.value.horaDescargue
                 )
-                console.log(viaje);
 
                 if(isEditing.value){
+                    viaje.idviaje = form.value.idviaje;
+                    
                     await viajeStore.updateViaje(viaje);
+                    
                 } else {
                     await viajeStore.createViaje(viaje);
                 }
+                console.log(viaje);
+                await viajeStore.fetchAllViajes();
                 resetForm();
             }
 
             const deleteViaje = async (idviaje) => {
                 await viajeStore.deleteViaje(idviaje)
+                await viajeStore.fetchAllViajes();
+            }
+
+            const convertDate = (mysqlDate) => {
+                const date = new Date(mysqlDate);
+                return `${(''+(date.getDate() + 1)).padStart(2, '0')} / ${(''+(date.getMonth() + 1)).padStart(2, '0')} / ${ date.getFullYear() }`;
+            }
+
+            const loadViajeForEditting = async (idviaje) => {
+                console.log(form.value.usuario);
+                isEditing.value = true;
+                const viaje = await viajeStore.fetchViajeById(idviaje);
+                console.log(viaje);
+                window.scrollTo({ top: 28, behavior: 'smooth' });
+                form.value = {
+                    idviaje: viaje.idviaje,
+                    fecha: new Date(viaje.fecha).toISOString().split('T')[0],
+                    cliente: viaje.cliente,
+                    origen: viaje.origen,
+                    destino: viaje.destino,
+                    producto: viaje.producto,
+                    cantidad: viaje.cantidad,
+                    horaCargue: viaje.horaCargue,
+                    horaDescargue: viaje.horaDescargue,
+                    valorTotal: viaje.valortotal,
+                    valorPagar: viaje.valorpagar,
+                    placa: viaje.placa,
+                    conductor: viaje.conductor,
+                    usuario: viaje.usuario_creador
+                };
+
             }
 
             const resetForm = () => {
                 form.value = {
+                    idviaje: 0,
                     fecha: "",
                     cliente: 0,
                     origen: 0,
@@ -231,6 +304,7 @@ import { defineComponent, onMounted, ref } from 'vue';
                     valorPagar: 0,
                     placa: "",
                     conductor: 0,
+                    usuario: 10000
                 }
                 isEditing.value = false;
             }
@@ -241,10 +315,30 @@ import { defineComponent, onMounted, ref } from 'vue';
                 viajeStore,
                 cityStore,
                 handleFormSubmit,
+                convertDate,
                 deleteViaje,
+                loadViajeForEditting,
                 resetForm   
             }
         }
     })
 
 </script>
+
+<style scoped>
+    .register-viajes-title{
+        margin-top: 20px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .btn-viajes {
+        padding: 8px 20px;
+    }
+
+    .td-acciones{
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+    }
+</style>

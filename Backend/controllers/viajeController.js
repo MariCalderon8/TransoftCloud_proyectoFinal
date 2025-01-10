@@ -8,7 +8,6 @@ class ViajeController {
         try {
             const rows = await databaseConnection.query('SELECT * FROM viaje');
             const viajes = rows.map((row) => new Viaje(row.fecha, row.origen, row.destino, row.cliente, row.valortotal, row.valorpagar, row.conductor, row.placa, row.usuario_creador, row.producto, row.cantidad, row.horaCargue, row.horaDescargue, row.idviaje)); 
-            console.log(viajes);
             res.json(viajes);
         } catch (error) {
             res.status(500).json({

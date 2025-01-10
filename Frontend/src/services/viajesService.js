@@ -14,11 +14,11 @@ class ViajesService {
   }
 
   async updateViaje(viaje) {
-    return await apiService.put(`/vehicles/${viaje.idviaje}`, viaje);
+    return await apiService.put(`/viajes/${viaje.idviaje}`, viaje);
   }
 
   async deleteViaje(idviaje) {
-    return await apiService.delete(`/vehicles/${idviaje}`);
+    return await apiService.delete(`/viajes/${idviaje}`);
   }
 }
 
