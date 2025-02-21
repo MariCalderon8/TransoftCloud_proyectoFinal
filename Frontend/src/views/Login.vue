@@ -1,35 +1,54 @@
+
 <template>
-    <div class="principal-container">
-        <div class="login-container">
-        <img src="../images/logo.jpeg" alt="Logo" class="header-image">
-        <h2>Inicio de Sesión</h2>
-            <form action="/login" method="post">
-                <label for="username">Usuario:</label>
-                <input type="text" id="username" name="username" required>
 
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" required>
+<body class="text-center">  
+<main class="form-signin">
+  <form>
+    
+        <h1 class="d-grid mt-3 mb-3 col-4 mx-auto">Transoftcloud</h1>
 
-                <!-- Apartado para pruebas -->
-                <router-link  to="/gestor-rutas">
+        <div class="text-center">
+     
+</div>
+
+
+     <div class="d-grid mt-3 mb-3 col-4 mx-auto">
+      <label for="floatingInput">Usuario</label>
+      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      
+
+    </div>
+
+    <div class="d-grid mt-3 mb-3 col-4 mx-auto">
+      <label for="floatingPassword">Contraseña</label>
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      
+    </div>
+
+
+    <div class="d-grid gap-2 col-6 mx-auto">
+  <button class="btn btn-primary" type="button">Ingresar</button>
+
+</div>
+  
+        <p class="mt-5 mb-3 text-muted">&copy; 2025-2026</p>
+  </form>
+
+  <!-- Apartado para pruebas -->
+  <router-link  to="/gestor-rutas">
                     <button>Ir a rutas</button>
                 </router-link>
-                
-                <input type="submit" value="Iniciar Sesión">
-            </form>
-        </div>
-    </div>
-</template>
+</main>
 
-<style scoped>
-    @import '../style/styles_login.css';
-</style>
-
-<script lang="js">
-import { defineComponent } from 'vue';
-
-
-export default defineComponent({
+   </body>
+  </template>
+  
+  
+  <script lang="js">
+  import { defineComponent } from 'vue';
+  
+  export default defineComponent({
     name: 'Login',
-})
-</script>
+  })
+  </script>
+  
